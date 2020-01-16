@@ -121,54 +121,41 @@ public class WelcomeActivity extends AppCompatActivity {
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-        btnSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchHomeScreen();
-            }
-        });
+        btnSkip.setOnClickListener(v -> launchHomeScreen());
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // checking for last page
-                // if last page home screen will be launched
-                int current = getItem(+1);
-                if (current < layouts.length) {
-                    // move to next screen
-                    viewPager.setCurrentItem(current);
-                    switch (current) {
-                        case 1:
-                            Toast.makeText(WelcomeActivity.this,"Slide 1",Toast.LENGTH_LONG).show();
-                            if (ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
-                                    ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                            ) {
-                                MultithreadingDemo thread = new MultithreadingDemo();
-                                thread.start();
-                            }else{
-                                askForPermission();
-                                // askForPermission(Manifest.permission.READ_CONTACTS, 102);
-                                // askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 103);
-                                //askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 104);
+        btnNext.setOnClickListener(v -> {
+            // checking for last page
+            // if last page home screen will be launched
+            int current = getItem(+1);
+            if (current < layouts.length) {
+                // move to next screen
+                viewPager.setCurrentItem(current);
+                switch (current) {
+                    case 1:
+                        Toast.makeText(WelcomeActivity.this,"Slide 1",Toast.LENGTH_LONG).show();
+                        if (ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
+                                ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            MultithreadingDemo thread = new MultithreadingDemo();
+                            thread.start();
+                        }else{
+                            askForPermission();
+                        }
+                        break;
 
+                    case 2:
+                        Toast.makeText(WelcomeActivity.this,"Slide 2",Toast.LENGTH_LONG).show();
+                        break;
 
-                            }
-                            break;
-
-                        case 2:
-                            Toast.makeText(WelcomeActivity.this,"Slide 2",Toast.LENGTH_LONG).show();
-                            break;
-
-                        case 3:
-                            Toast.makeText(WelcomeActivity.this,"Slide 3",Toast.LENGTH_LONG).show();
-                            break;
+                    case 3:
+                        Toast.makeText(WelcomeActivity.this,"Slide 3",Toast.LENGTH_LONG).show();
+                        break;
 
 
-                    }
-
-                } else {
-                    launchHomeScreen();
                 }
+
+            } else {
+                launchHomeScreen();
             }
         });
     }
@@ -178,26 +165,42 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void askForPermission() {
 
-        if (ContextCompat.checkSelfPermission(WelcomeActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) + ContextCompat
-                .checkSelfPermission(WelcomeActivity.this,
-                        Manifest.permission.READ_CONTACTS) +
-                ContextCompat.checkSelfPermission(WelcomeActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(WelcomeActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE) +
+                ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.READ_CONTACTS) +
+                ContextCompat.checkSelfPermission(WelcomeActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) +
+                ContextCompat.checkSelfPermission(WelcomeActivity.this,Manifest.permission.CAMERA) +
+                ContextCompat.checkSelfPermission(WelcomeActivity.this,Manifest.permission.USE_BIOMETRIC) +
+                ContextCompat.checkSelfPermission(WelcomeActivity.this,Manifest.permission.USE_FINGERPRINT) +
+                ContextCompat.checkSelfPermission(WelcomeActivity.this,Manifest.permission.RECORD_AUDIO)
+
                 != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(WelcomeActivity.this,"Permissions asking mode", Toast.LENGTH_LONG).show();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(
-                        new String[]{Manifest.permission
-                                .READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        new String[]{
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA,
+                                Manifest.permission.USE_BIOMETRIC,
+                                Manifest.permission.USE_FINGERPRINT,
+                                Manifest.permission.RECORD_AUDIO},
+
                         123);
             }
         }
         else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(
-                        new String[]{Manifest.permission
-                                .READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        new String[]{
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA,
+                                Manifest.permission.USE_BIOMETRIC,
+                                Manifest.permission.USE_FINGERPRINT,
+                                Manifest.permission.RECORD_AUDIO},
                         123);
             }else{
                 Toast.makeText(WelcomeActivity.this,"Already Granted", Toast.LENGTH_LONG).show();
@@ -205,18 +208,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
         }
 
-       /* if (ContextCompat.checkSelfPermission(WelcomeActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(WelcomeActivity.this, permission)) {
-                ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{permission}, requestCode);
-                Toast.makeText(WelcomeActivity.this,"Inside If",Toast.LENGTH_LONG).show();
-
-            } else {
-                ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{permission}, requestCode);
-            }
-        } else if (ContextCompat.checkSelfPermission(WelcomeActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
-            Toast.makeText(getApplicationContext(), "Permission was denied for "+permission, Toast.LENGTH_SHORT).show();
-        }*/
     }
 
     @Override
@@ -225,9 +216,9 @@ public class WelcomeActivity extends AppCompatActivity {
         switch (requestCode) {
             case 123: {
                 if (grantResults.length > 0) {
+                    boolean readExternalFile = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean readContacts = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     boolean writeExternalFile = grantResults[2] == PackageManager.PERMISSION_GRANTED;
-                    boolean readExternalFile = grantResults[0] == PackageManager.PERMISSION_GRANTED;
 
                     if(readContacts && readExternalFile)
                     {
@@ -240,8 +231,14 @@ public class WelcomeActivity extends AppCompatActivity {
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             requestPermissions(
-                                    new String[]{Manifest.permission
-                                            .READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    new String[]{
+                                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                                            Manifest.permission.READ_CONTACTS,
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                            Manifest.permission.CAMERA,
+                                            Manifest.permission.USE_BIOMETRIC,
+                                            Manifest.permission.USE_FINGERPRINT,
+                                            Manifest.permission.RECORD_AUDIO},
                                     123);
                         }
                     }
